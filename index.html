@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+<body>
+    <script>
+      const fs = require('fs')
+      const sodium = require('chloride')
+
+      const keys = sodium.crypto_sign_keypair()
+      const keys2 = sodium.crypto_sign_keypair()
+
+      const msg = new Uint8Array(fs.readFileSync('msg.json'))
+
+      const sig = sodium.crypto_sign_detached(msg, keys.secretKey)
+      console.log(sig.toString('base64'))
+
+      const isVerified = sodium.crypto_sign_verify_detached(sig, msg, keys.publicKey)
+      console.log(isVerified)
+      
+      const isVerified2 = sodium.crypto_sign_verify_detached(sig, msg, keys2.publicKey)
+      console.log(isVerified2)
+
+    </script>
+</body>
+</html>
